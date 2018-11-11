@@ -21,4 +21,16 @@ class CardView: UIView, DeckCard {
         return view
     }
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        setupUI()
+    }
+    
+    private func setupUI() {
+        let cornerRadius: CGFloat = 15.0
+        layer.cornerRadius = cornerRadius
+        
+        clipsToBounds = true
+    }
+    
 }

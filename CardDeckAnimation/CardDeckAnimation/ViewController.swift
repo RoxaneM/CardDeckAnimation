@@ -12,7 +12,6 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var deckContainer: DeckAnimationContainer!
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -22,7 +21,7 @@ class ViewController: UIViewController {
     
     private lazy var cardsArray: [CardView] = {
         let card1 = CardView.instanceFromNib(image: UIImage(named: "towerBridge"), text: "Tower Bridge is a combined bascule and suspension bridge in London built between 1886 and 1894. The bridge crosses the River Thames close to the Tower of London and has become an iconic symbol of London. Because of this, Tower Bridge is sometimes confused with London Bridge, situated some 0.5 mi (0.80 km) upstream. Tower Bridge is one of five London bridges now owned and maintained by the Bridge House Estates, a charitable trust overseen by the City of London Corporation.")
-        card1.backgroundColor = .blue
+        card1.backgroundColor = .purple
         
         let card2 = CardView.instanceFromNib(image: UIImage(named: "londonEye"), text: "The London Eye is a giant Ferris wheel on the South Bank of the River Thames in London. It is Europe's tallest Ferris wheel,[10] is the most popular paid tourist attraction in the United Kingdom with over 3.75 million visitors annually,[11] and has made many appearances in popular culture. The structure is 135 metres (443 ft) tall and the wheel has a diameter of 120 metres (394 ft). When it opened to the public in 2000 it was the world's tallest Ferris wheel.")
         card2.backgroundColor = .cyan
