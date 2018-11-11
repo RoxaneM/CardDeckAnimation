@@ -138,10 +138,10 @@ class DeckAnimationContainer: UIView {
         //changing frames
         let dyMaxOriginMove: CGFloat = 30.0
         let moveCoef = dyMaxOriginMove / dyMaxRecognition
-        let dyOriginMove = min(abs(dy * moveCoef), dyMaxOriginMove)
+        let dyOriginMove = dy * moveCoef
         
         var frame = topCardFrame
-        frame.origin.y += dy > 0 ? dyOriginMove : -dyOriginMove
+        frame.origin.y += dyOriginMove
         topCardView.frame = frame
         
         if dy > 0 { //swipe down
