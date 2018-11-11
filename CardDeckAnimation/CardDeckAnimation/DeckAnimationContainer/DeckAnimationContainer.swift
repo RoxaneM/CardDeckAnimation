@@ -46,7 +46,7 @@ class DeckAnimationContainer: UIView {
         cards = newCards
         
         if let topCardView = cards.first as? UIView {
-            updateTopCardFrame(basedOn: topCardView.frame.size)
+            originalCardRatio = topCardView.frame.width / topCardView.frame.height
         }
         
         for card in newCards.reversed() {
@@ -120,7 +120,13 @@ class DeckAnimationContainer: UIView {
     }
     
     // MARK: - Layout
+    
     override func layoutSubviews() {
+        updateTopCardFrame()
+        layoutCards()
+    }
+    
+    private func layoutCards() {
         for index in 0 ..< cards.count {
             if let cardView = cards[index] as? UIView {
                 
@@ -134,6 +140,7 @@ class DeckAnimationContainer: UIView {
     }
     
     private var topCardFrame: CGRect = CGRect.zero
+    private var originalCardRatio: CGFloat = 1.0 // width to height relation
     
     private func cardFrame(at orderPosition: Int) -> CGRect {
         let cardLevelInset: CGFloat = 10.0
@@ -147,15 +154,14 @@ class DeckAnimationContainer: UIView {
         return cardFrame
     }
     
-    private func updateTopCardFrame(basedOn originalCardSize: CGSize) {
+    private func updateTopCardFrame() {
         let minEdgeInset: CGFloat = 10.0
 
         //only fitting by width for now
-        let calculatedCardWidth = frame.width - (2.0 * minEdgeInset)
-        let scaleCoef = calculatedCardWidth / originalCardSize.width
-        let calculatedHeight = originalCardSize.height * scaleCoef
+        let calculatedWidth = frame.width - (2.0 * minEdgeInset)
+        let calculatedHeight = calculatedWidth / originalCardRatio
         
-        topCardFrame = CGRect(x: minEdgeInset, y: minEdgeInset, width: calculatedCardWidth, height: calculatedHeight)
+        topCardFrame = CGRect(x: minEdgeInset, y: minEdgeInset, width: calculatedWidth, height: calculatedHeight)
     }
 
 }
