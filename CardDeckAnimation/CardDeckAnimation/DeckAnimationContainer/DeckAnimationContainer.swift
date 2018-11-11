@@ -35,6 +35,11 @@ class DeckAnimationContainer: UIView {
         setup()
     }
     
+    override func layoutSubviews() {
+        updateTopCardFrame()
+        layoutCards()
+    }
+    
     // MARK: - Public
     var cardsVisibleDepth: Int = 3 {
         didSet {
@@ -120,11 +125,8 @@ class DeckAnimationContainer: UIView {
     }
     
     // MARK: - Layout
-    
-    override func layoutSubviews() {
-        updateTopCardFrame()
-        layoutCards()
-    }
+    private var topCardFrame: CGRect = CGRect.zero
+    private var originalCardRatio: CGFloat = 1.0 // width to height relation
     
     private func layoutCards() {
         for index in 0 ..< cards.count {
@@ -138,14 +140,11 @@ class DeckAnimationContainer: UIView {
             }
         }
     }
-    
-    private var topCardFrame: CGRect = CGRect.zero
-    private var originalCardRatio: CGFloat = 1.0 // width to height relation
-    
+
     private func cardFrame(at orderPosition: Int) -> CGRect {
         let cardLevelInset: CGFloat = 10.0
         
-        let cardLevel = orderPosition < cardsVisibleDepth ? orderPosition : cardsVisibleDepth
+        let cardLevel = orderPosition < cardsVisibleDepth ? orderPosition : cardsVisibleDepth - 1
         let cardInset = cardLevelInset * CGFloat(cardLevel)
         
         var cardFrame = topCardFrame.insetBy(dx: cardInset, dy: cardInset)
