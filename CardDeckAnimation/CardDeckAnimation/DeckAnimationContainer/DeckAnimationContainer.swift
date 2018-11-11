@@ -23,10 +23,6 @@ extension DeckCard {
 }
 
 class DeckAnimationContainer: UIView {
-    
-    private var cards = [DeckCard]()
-    private var topCardIndex = 0
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -40,13 +36,22 @@ class DeckAnimationContainer: UIView {
     }
     
     // MARK: - Public
+    var cardsVisibleDepth: Int = 3 {
+        didSet {
+            setNeedsLayout()
+        }
+    }
+    
     func setCards(_ newCards: [DeckCard]) {
         cards = newCards
+        
+        if let topCardView = cards.first as? UIView {
+            updateTopCardFrame(basedOn: topCardView.frame.size)
+        }
         
         for card in newCards.reversed() {
             //_ = card.view
             if let cardView = card as? UIView {
-                cardView.frame = frame(for: card, at: 0)
                 addSubview(cardView)
             }
         }
@@ -67,6 +72,9 @@ class DeckAnimationContainer: UIView {
     }
     
     // MARK: - Private
+    private var cards = [DeckCard]()
+    
+    private var topCardIndex = 0
     
     private var nextCardIndex: Int {
         let nextIndex = topCardIndex + 1
@@ -78,6 +86,7 @@ class DeckAnimationContainer: UIView {
         return previousIndex < 0 ? cards.count - 1 : previousIndex
     }
     
+    // MARK: Gesture recognizer
     private func setup() {
         let tapGR = UITapGestureRecognizer(target: self, action: #selector(handleTapGR(_:)))
         addGestureRecognizer(tapGR)
@@ -93,6 +102,7 @@ class DeckAnimationContainer: UIView {
         }
     }
     
+    // MARK: - Animation
     private func showNextCard() {
         if let topCard = cards[topCardIndex] as? UIView {
             sendSubview(toBack: topCard)
@@ -110,8 +120,42 @@ class DeckAnimationContainer: UIView {
     }
     
     // MARK: - Layout
-    private func frame(for card: DeckCard, at index: Int) -> CGRect {
-        return bounds.insetBy(dx: 20.0, dy: 20.0)
+    override func layoutSubviews() {
+        for index in 0 ..< cards.count {
+            if let cardView = cards[index] as? UIView {
+                
+                let currentOrderPosition = index - topCardIndex < 0 ?
+                    index - topCardIndex + cards.count :
+                    index - topCardIndex
+                
+                cardView.frame = cardFrame(at: currentOrderPosition)
+            }
+        }
+    }
+    
+    private var topCardFrame: CGRect = CGRect.zero
+    
+    private func cardFrame(at orderPosition: Int) -> CGRect {
+        let cardLevelInset: CGFloat = 10.0
+        
+        let cardLevel = orderPosition < cardsVisibleDepth ? orderPosition : cardsVisibleDepth
+        let cardInset = cardLevelInset * CGFloat(cardLevel)
+        
+        var cardFrame = topCardFrame.insetBy(dx: cardInset, dy: cardInset)
+        cardFrame.origin.y = (topCardFrame.maxY + cardInset) - cardFrame.height
+        
+        return cardFrame
+    }
+    
+    private func updateTopCardFrame(basedOn originalCardSize: CGSize) {
+        let minEdgeInset: CGFloat = 10.0
+
+        //only fitting by width for now
+        let calculatedCardWidth = frame.width - (2.0 * minEdgeInset)
+        let scaleCoef = calculatedCardWidth / originalCardSize.width
+        let calculatedHeight = originalCardSize.height * scaleCoef
+        
+        topCardFrame = CGRect(x: minEdgeInset, y: minEdgeInset, width: calculatedCardWidth, height: calculatedHeight)
     }
 
 }
