@@ -25,14 +25,10 @@ extension DeckCard {
 class DeckAnimationContainer: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        setup()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-
-        setup()
     }
     
     override func layoutSubviews() {
@@ -64,16 +60,31 @@ class DeckAnimationContainer: UIView {
         topCardIndex = 0
     }
     
-    func addCard(_ card: DeckCard) {
-        cards.append(card)
+    // MARK: - Override touches
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touchPoint = touches.first?.location(in: self) else { return }
+        
+        firstTouchPoint = touchPoint
+        lastSavedTouchPoint = touchPoint
     }
     
-    func addCards(_ newCards: [DeckCard]) {
-        cards.append(contentsOf: newCards)
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touchPoint = touches.first?.location(in: self) else { return }
+        
+        animateOnMove(newTouchPoint: touchPoint)
+        
+        lastSavedTouchPoint = touchPoint
     }
     
-    func removeAllCards() {
-        cards.removeAll()
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let topCardView = cards[topCardIndex] as? UIView else { return }
+        topCardView.alpha = 1.0
+
+        animateOnEnded()
+        
+        firstTouchPoint = CGPoint.zero
+        lastSavedTouchPoint = CGPoint.zero
     }
     
     // MARK: - Private
@@ -91,55 +102,6 @@ class DeckAnimationContainer: UIView {
         return previousIndex < 0 ? cards.count - 1 : previousIndex
     }
     
-    // MARK: Gesture recognizer
-    private func setup() {
-//        let tapGR = UITapGestureRecognizer(target: self, action: #selector(handleTapGR(_:)))
-//        addGestureRecognizer(tapGR)
-    }
-    
-    @objc private func handleTapGR(_ tapGR: UITapGestureRecognizer) {
-        let touchLocation = tapGR.location(in: self)
-        
-        if touchLocation.y < frame.height / 2 {
-            showNextCard()
-        } else {
-            showPreviousCard()
-        }
-    }
-    
-    private var firstTouchPoint = CGPoint.zero
-    private var lastSavedTouchPoint = CGPoint.zero
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if let touch = touches.first {
-            firstTouchPoint = touch.location(in: self)
-            lastSavedTouchPoint = firstTouchPoint
-        }
-    }
-    
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let touchPoint = touches.first?.location(in: self) else { return }
-
-        animateOnMove(newTouchPoint: touchPoint)
-        lastSavedTouchPoint = touchPoint
-    }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let topCardView = cards[topCardIndex] as? UIView else { return }
-        topCardView.alpha = 1.0
-        
-        let dy = firstTouchPoint.y - lastSavedTouchPoint.y
-        if dy < 0 { //swipe down
-            showPreviousCard()
-        } else { // swipe up
-            showNextCard()
-        }
-        
-        firstTouchPoint = CGPoint.zero
-        lastSavedTouchPoint = CGPoint.zero
-    }
-    
-    // MARK: - Animation
     private func showNextCard() {
         if let topCard = cards[topCardIndex] as? UIView {
             sendSubview(toBack: topCard)
@@ -156,21 +118,51 @@ class DeckAnimationContainer: UIView {
         }
     }
     
+    // MARK: - Animation
+    private var firstTouchPoint = CGPoint.zero
+    private var lastSavedTouchPoint = CGPoint.zero
+
     private func animateOnMove(newTouchPoint: CGPoint) {
         guard let topCardView = cards[topCardIndex] as? UIView else { return }
         
+        // only dragging for 100 points up and 100 down will take effect, any exceeded paths will be muted
         let dyMaxRecognition: CGFloat = 100.0
-        let dy = firstTouchPoint.y - newTouchPoint.y
+        let dy = newTouchPoint.y - firstTouchPoint.y
         
+
+        //changing alpha
         let dyAbs = min(abs(dy), dyMaxRecognition)
         let alphaIntensity = 1.0 - dyAbs / dyMaxRecognition
-
         topCardView.alpha = 0.5 + alphaIntensity/2 //force it into range [0.5; 1.0]
         
-        if dy < 0 { //swipe down
+        //changing frames
+        let dyMaxOriginMove: CGFloat = 30.0
+        let moveCoef = dyMaxOriginMove / dyMaxRecognition
+        let dyOriginMove = min(abs(dy * moveCoef), dyMaxOriginMove)
+        
+        var frame = topCardFrame
+        frame.origin.y += dy > 0 ? dyOriginMove : -dyOriginMove
+        topCardView.frame = frame
+        
+        if dy > 0 { //swipe down
             
         } else { // swipe up
             
+        }
+    }
+    
+    private func animateOnEnded() {
+        let dy = lastSavedTouchPoint.y - firstTouchPoint.y
+        UIView.animate(withDuration: 0.5) { [weak self] in
+            
+            if dy > 0 { //swipe down
+                self?.showPreviousCard()
+            } else { // swipe up
+                self?.showNextCard()
+            }
+            
+            self?.setNeedsLayout()
+            self?.layoutIfNeeded()
         }
     }
     
