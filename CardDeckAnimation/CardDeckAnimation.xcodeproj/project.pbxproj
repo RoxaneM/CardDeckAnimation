@@ -13,6 +13,9 @@
 		76B8BDBB2198685300E3C26B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 76B8BDBA2198685300E3C26B /* Assets.xcassets */; };
 		76B8BDBE2198685300E3C26B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 76B8BDBC2198685300E3C26B /* LaunchScreen.storyboard */; };
 		76B8BDC92198685300E3C26B /* CardDeckAnimationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76B8BDC82198685300E3C26B /* CardDeckAnimationTests.swift */; };
+		76B8BDD62198694100E3C26B /* DeckAnimationContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76B8BDD52198694100E3C26B /* DeckAnimationContainer.swift */; };
+		76B8BDDA2198695500E3C26B /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76B8BDD82198695500E3C26B /* CardView.swift */; };
+		76B8BDDB2198695500E3C26B /* CardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76B8BDD92198695500E3C26B /* CardView.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +39,9 @@
 		76B8BDC42198685300E3C26B /* CardDeckAnimationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CardDeckAnimationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		76B8BDC82198685300E3C26B /* CardDeckAnimationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardDeckAnimationTests.swift; sourceTree = "<group>"; };
 		76B8BDCA2198685300E3C26B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		76B8BDD52198694100E3C26B /* DeckAnimationContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeckAnimationContainer.swift; sourceTree = "<group>"; };
+		76B8BDD82198695500E3C26B /* CardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		76B8BDD92198695500E3C26B /* CardView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CardView.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,11 +84,13 @@
 			isa = PBXGroup;
 			children = (
 				76B8BDB32198685100E3C26B /* AppDelegate.swift */,
+				76B8BDBF2198685300E3C26B /* Info.plist */,
+				76B8BDD42198692000E3C26B /* DeckAnimationContainer */,
+				76B8BDD72198695500E3C26B /* Card Views */,
 				76B8BDB52198685100E3C26B /* ViewController.swift */,
 				76B8BDB72198685100E3C26B /* Main.storyboard */,
-				76B8BDBA2198685300E3C26B /* Assets.xcassets */,
 				76B8BDBC2198685300E3C26B /* LaunchScreen.storyboard */,
-				76B8BDBF2198685300E3C26B /* Info.plist */,
+				76B8BDD3219868ED00E3C26B /* Resources */,
 			);
 			path = CardDeckAnimation;
 			sourceTree = "<group>";
@@ -94,6 +102,31 @@
 				76B8BDCA2198685300E3C26B /* Info.plist */,
 			);
 			path = CardDeckAnimationTests;
+			sourceTree = "<group>";
+		};
+		76B8BDD3219868ED00E3C26B /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				76B8BDBA2198685300E3C26B /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		76B8BDD42198692000E3C26B /* DeckAnimationContainer */ = {
+			isa = PBXGroup;
+			children = (
+				76B8BDD52198694100E3C26B /* DeckAnimationContainer.swift */,
+			);
+			path = DeckAnimationContainer;
+			sourceTree = "<group>";
+		};
+		76B8BDD72198695500E3C26B /* Card Views */ = {
+			isa = PBXGroup;
+			children = (
+				76B8BDD82198695500E3C26B /* CardView.swift */,
+				76B8BDD92198695500E3C26B /* CardView.xib */,
+			);
+			path = "Card Views";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -179,6 +212,7 @@
 			files = (
 				76B8BDBE2198685300E3C26B /* LaunchScreen.storyboard in Resources */,
 				76B8BDBB2198685300E3C26B /* Assets.xcassets in Resources */,
+				76B8BDDB2198695500E3C26B /* CardView.xib in Resources */,
 				76B8BDB92198685100E3C26B /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -199,6 +233,8 @@
 			files = (
 				76B8BDB62198685100E3C26B /* ViewController.swift in Sources */,
 				76B8BDB42198685100E3C26B /* AppDelegate.swift in Sources */,
+				76B8BDDA2198695500E3C26B /* CardView.swift in Sources */,
+				76B8BDD62198694100E3C26B /* DeckAnimationContainer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -369,7 +405,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = rm.CardDeckAnimation;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -387,7 +423,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = rm.CardDeckAnimation;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
